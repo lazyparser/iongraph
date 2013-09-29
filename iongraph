@@ -101,9 +101,12 @@ def getResumePointRow(rp, mode):
     if 'caller' in rp:
         rpCaller = '<td align="left">&#40;&#40;%s&#41;&#41;</td>' % str(rp['caller'])
 
+    # Omit details since we just want to see the caller.
+    rpContents = '<td align="left"><font color="grey50">resumepoint</font></td>'
+
     # Middle column: ordered contents of the MResumePoint.
-    insts = ''.join('%s ' % t for t in rp['operands'])
-    rpContents = '<td align="left"><font color="grey50">resumepoint %s</font></td>' % insts
+    #insts = ''.join('%s ' % t for t in rp['operands'])
+    #rpContents = '<td align="left"><font color="grey50">resumepoint %s</font></td>' % insts
 
     # Right column: unused.
     rpRight = '<td></td>'
@@ -149,14 +152,18 @@ def getBlockLabel(b):
     if 'resumePoint' in b:
         s += getResumePointRow(b['resumePoint'], None)
 
-    for inst in b['instructions']:
-        if 'resumePoint' in inst:
-            s += getResumePointRow(inst['resumePoint'], 'At')
+    # Omit all instructions and resume points except the last inst.
+    if len(b['instructions']) > 0:
+        s += getInstructionRow(b['instructions'][-1])
 
-        s += getInstructionRow(inst)
-
-        if 'resumePoint' in inst:
-            s += getResumePointRow(inst['resumePoint'], 'After')
+#    for inst in b['instructions']:
+#        if 'resumePoint' in inst:
+#            s += getResumePointRow(inst['resumePoint'], 'At')
+#
+#        s += getInstructionRow(inst)
+#
+#        if 'resumePoint' in inst:
+#            s += getResumePointRow(inst['resumePoint'], 'After')
 
     s += '</table>>'
     return s

@@ -193,6 +193,10 @@ def buildGraphForIR(name, ir, mir):
         if 'splitedge' in b['attributes']:
             node.addprops({'style':'dashed'})
 
+        if 'hasMoved' in bactive:
+            node.addprops({'style':'filled'})
+            node.addprops({'fillcolor':'yellow'})
+
         g.addnode(node)
 
         for succ in b['successors']: # which are integers
